@@ -4,7 +4,7 @@
 
 [![NPM Version](https://img.shields.io/npm/v/opta.svg)](https://npmjs.org/package/opta)
 [![NPM Downloads](https://img.shields.io/npm/dm/opta.svg)](https://npmjs.org/package/opta)
-[![test](https://github.com/wesleytodd/opta/workflows/test/badge.svg)](https://github.com/wesleytodd/opta/actions?query=workflow%3ATest)
+[![test](https://github.com/wesleytodd/opta/workflows/Test/badge.svg)](https://github.com/wesleytodd/opta/actions?query=workflow%3ATest)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](https://github.com/standard/standard)
 
 Collect user input from cli flags, interactive prompts, and JS input.
