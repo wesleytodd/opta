@@ -46,6 +46,11 @@ yargsInstance(process.argv.slice(2))
 // the user
 opts.overrides(overrides)
 
+// Set detauls. These will be used as
+// defaults when prompting, and fill in
+// values not specified in other ways
+opts.defaults(defaults)
+
 // Display prompts using inquirer, will
 // populate values with input from user
 const promptor = opts.prompt()
@@ -59,4 +64,42 @@ const values = opts.values()
 setTimeout(() => {
   console.log(`${values.hello} ${values.world}`)
 }, values.time)
+```
+
+## Composition of options
+
+One of the primary focuses of `opta` is to enable easy composition of inputs
+across projects.  If a project exports it's `opta` instance, another can simply
+combine their `options` parameters like this:
+
+```javascript
+const opta = require('opta')
+
+// Project One exports a key `opts` which is
+// an instance of `opta`, along with it's other functionality
+const projectOne = require('project-one')
+
+// My Project which wants to expose functionality from
+// Project One can simply merge `opts.options` into the
+// options passed to my instance
+const myOpts = opta({
+  options: {
+    ...projectOne.opts.options,
+    myOptions: true,
+    // You can also simply override the options descriptor
+    // from `projectOne.opts`.  In this example we disable
+    // the prompt but leave the rest alone
+    projectOneOpt: {
+      ...projectOne.opts.options.projectOneOpt,
+      prompt: false
+    }
+  }
+})
+
+// Now when we call .cli(), .prompt(), and .values()
+// we will get options from both the composed options
+// and our projects
+await myOpts.prompt()
+const vals = myOpts.values()
+console.log(vals) // all options from both Project and My Project
 ```
