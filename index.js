@@ -1,4 +1,5 @@
 'use strict'
+
 // Poor version of lazyrequire
 let __yargs
 function useYargs () {
@@ -70,10 +71,35 @@ module.exports = function (opts = {}) {
       if (o.flag === false) {
         continue
       }
+      const flag = o.flag || {}
+
+      // Coerce in yargs is basically filter then validate from inquirer
+      let coerce = flag.coerce
+      if (!coerce && (o.filter || o.validate)) {
+        coerce = (val) => {
+          let v = val
+          if (typeof o.filter === 'function') {
+            v = o.filter(v)
+          }
+          if (typeof o.validate === 'function') {
+            const valid = o.validate(v)
+            if (valid === true) {
+              return v
+            }
+            if (valid === false) {
+              throw new Error(`Invalid input: ${v}`)
+            }
+            if (typeof valid === 'string') {
+              throw new Error(valid)
+            }
+          }
+        }
+      }
 
       cli.option((o.flag && o.flag.key) || key, {
         description: o.description,
         type: o.type,
+        coerce,
         ...o.flag
       })
     }
@@ -107,7 +133,8 @@ module.exports = function (opts = {}) {
           case 'array':
             return 'list'
         }
-      })() || 'input'
+        return 'input'
+      })()
 
       let _default = defaults[key] || prompt.default
       if (typeof _default === 'function') {
@@ -136,7 +163,9 @@ module.exports = function (opts = {}) {
         type: type,
         message: `${o.description || key}:`,
         default: _default,
-        when: !cliSet && !overrideSet
+        when: !cliSet && !overrideSet,
+        filter: o.filter,
+        validate: o.validate
       }
 
       // Use default or merge default with config
