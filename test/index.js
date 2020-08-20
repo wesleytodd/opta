@@ -50,6 +50,45 @@ suite(pkg.name, () => {
     assert.strictEqual(values.baz, 'baz')
   })
 
+  test('set defaults', async () => {
+    const opts = opta({
+      options: {
+        foo: {
+          default: 'foo'
+        },
+        bar: true,
+        baz: {
+          prompt: false
+        }
+      },
+      defaults: {
+        baz: 'baz'
+      },
+      promptModule: () => {
+        return async (prompts) => {
+          assert.strictEqual(prompts[0].name, 'foo')
+          assert.strictEqual(prompts[0].default, 'foo')
+
+          assert.strictEqual(prompts[1].name, 'bar')
+          assert.strictEqual(prompts[1].default, 'bar')
+
+          return {
+            bar: 'bar!'
+          }
+        }
+      }
+    })
+
+    opts.defaults({
+      bar: 'bar'
+    })
+    await opts.prompt()()
+    const values = opts.values()
+    assert.strictEqual(values.foo, 'foo')
+    assert.strictEqual(values.bar, 'bar!')
+    assert.strictEqual(values.baz, 'baz')
+  })
+
   test('work without calling .cli()', async () => {
     const opts = opta({
       options: {

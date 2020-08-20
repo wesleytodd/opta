@@ -17,7 +17,8 @@ module.exports = function (opts = {}) {
   const optionKeys = Object.keys(options)
   const createCLIModule = opts.cliModule || useYargs()
   const createPromptModule = opts.promptModule || useInquirer().createPromptModule
-  const defaults = {}
+  const optionDefauts = opts.defaults || {}
+  let defaults = {}
   let overrides = null
   let cliInput = null
   let promptInput = null
@@ -47,8 +48,9 @@ module.exports = function (opts = {}) {
     }
 
     // Defaults
-    if (typeof d.default !== 'undefined') {
-      defaults[key] = d.default
+    const def = optionDefauts[key] || d.default
+    if (typeof def !== 'undefined') {
+      defaults[key] = def
     }
   }
 
@@ -58,6 +60,10 @@ module.exports = function (opts = {}) {
     prompt,
     overrides: (_overrides) => {
       overrides = Object.assign({}, overrides, _overrides)
+      return instance
+    },
+    defaults: (_defaults) => {
+      defaults = Object.assign({}, defaults, _defaults)
       return instance
     },
     values
