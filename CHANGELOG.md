@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.2](https://github.com/wesleytodd/opta/compare/v0.0.1...v0.0.2) (2020-08-26)
+
+
+### Features
+
+* groups for prompts and a host of bug fixes ([99f0887](https://github.com/wesleytodd/opta/commit/99f088766892855aae8e4f0bc263c964a43789fc))
+
 ### 0.0.1 (2020-08-20)
 
 
