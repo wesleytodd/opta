@@ -21,7 +21,7 @@ module.exports = function (opts = {}) {
   let defaults = {}
   let overrides = null
   let cliInput = null
-  let promptInput = null
+  let promptInput = {}
 
   // Process options
   for (const key of optionKeys) {
@@ -102,9 +102,10 @@ module.exports = function (opts = {}) {
         }
       }
 
-      cli.option((o.flag && o.flag.key) || key, {
+      cli.option(flag.key || key, {
         description: o.description,
         type: o.type,
+        group: o.group,
         coerce,
         ...o.flag
       })
@@ -119,8 +120,22 @@ module.exports = function (opts = {}) {
     }
   }
 
-  function prompt (builder) {
-    const promptor = createPromptModule()
+  function prompt (opts) {
+    // Prompt options
+    let builder = (p) => p
+    let createPromptor = createPromptModule
+    let groups = null
+    if (typeof opts === 'function') {
+      builder = opts
+    } else if (Array.isArray(opts)) {
+      groups = opts
+    } else if (opts) {
+      builder = opts.builder || builder
+      createPromptor = opts.promptor || createPromptor
+      groups = opts.groups || groups
+    }
+
+    const promptor = createPromptor()
 
     let prompts = []
     for (const key of optionKeys) {
@@ -128,8 +143,14 @@ module.exports = function (opts = {}) {
       if (!o || o.prompt === false) {
         continue
       }
-      const prompt = o.prompt || {}
 
+      // If we passed `groups` filter out prompts not in the group
+      const g = o.group || (o.prompt && o.prompt.group)
+      if (groups && (!g || !groups.includes(g))) {
+        continue
+      }
+
+      const prompt = o.prompt || {}
       const type = prompt.type || (() => {
         switch (o.type) {
           case 'boolean':
@@ -142,34 +163,44 @@ module.exports = function (opts = {}) {
         return 'input'
       })()
 
-      let _default = defaults[key] || prompt.default
+      // Handle message as function, augment with entire options
+      let _message = prompt.message
+      if (typeof prompt.message === 'function') {
+        _message = (ans) => {
+          return prompt.message(ans, values(ans))
+        }
+      } else if (!_message) {
+        _message = `${o.description || key}:`
+      }
+
+      // Handle default as functions, augment with entire options
+      const __default = typeof defaults[key] !== 'undefined' ? defaults[key] : prompt.default
+      let _default = __default
       if (typeof _default === 'function') {
         _default = async (ans) => {
-          if (prompt.default) {
-            // @TODO wat to do?
-          }
-
-          return defaults[key](
-            Object.assign(
-              {},
-              defaults,
-              cliInput,
-              ans,
-              overrides
-            )
-          )
+          return __default(ans, values(ans))
         }
       }
 
+      // Handle whe, augment with our logic and entire options
       const cliSet = cliInput && typeof cliInput[key] !== 'undefined'
       const overrideSet = overrides && typeof overrides[key] !== 'undefined'
+      const promptSet = promptInput && typeof promptInput[key] !== 'undefined'
+      let _when = prompt.when
+      if (typeof prompt.when === 'function') {
+        _when = (input) => {
+          return prompt.when(input, !cliSet && !overrideSet && !promptSet, values(input))
+        }
+      } else if (typeof prompt.when === 'undefined') {
+        _when = !cliSet && !overrideSet && !promptSet
+      }
 
       const defaultPrompt = {
         name: key,
         type: type,
-        message: `${o.description || key}:`,
+        message: _message,
         default: _default,
-        when: !cliSet && !overrideSet,
+        when: _when,
         filter: o.filter,
         validate: o.validate
       }
@@ -180,17 +211,19 @@ module.exports = function (opts = {}) {
       } else {
         prompts.push({
           ...defaultPrompt,
-          ...prompt
+          ...prompt,
+          message: _message,
+          default: _default,
+          when: _when
         })
       }
     }
 
-    if (typeof builder === 'function') {
-      prompts = builder(prompts)
-    }
+    // Run builder
+    prompts = builder(prompts)
 
     return async () => {
-      promptInput = await promptor(prompts)
+      promptInput = Object.assign(promptInput, await promptor(prompts))
       return instance
     }
   }

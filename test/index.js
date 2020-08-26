@@ -123,9 +123,9 @@ suite(pkg.name, () => {
         },
         remoteOrigin: {
           description: 'remote origin',
-          default: async (input) => {
+          default: async (input, opts) => {
             // Ensure we get the input including defaults
-            assert.strictEqual(input.cwd, TMP)
+            assert.strictEqual(opts.cwd, TMP)
             // Fake load git remote origin
             return remote
           }
@@ -157,8 +157,8 @@ suite(pkg.name, () => {
           default: process.cwd()
         },
         name: {
-          default: (input) => {
-            return path.basename(input.cwd)
+          default: (input, opts) => {
+            return path.basename(opts.cwd)
           }
         },
         repository: true
@@ -226,5 +226,29 @@ suite(pkg.name, () => {
     assert.strictEqual(pkgValues.cwd, TMP)
     assert.strictEqual(pkgValues.name, '@scope/tmp')
     assert.strictEqual(pkgValues.repository, 'git@github.com:wesleytodd/scope-tmp.git')
+  })
+
+  test('option groups in prompts', async () => {
+    const opts = opta({
+      options: {
+        foo: {
+          group: 'FooBar'
+        },
+        bar: {
+          group: 'FooBar'
+        },
+        baz: true
+      },
+      promptModule: () => {
+        return async (prompts) => {
+          assert.strictEqual(prompts.length, 2)
+          assert.strictEqual(prompts[0].name, 'foo')
+          assert.strictEqual(prompts[1].name, 'bar')
+          return { }
+        }
+      }
+    })
+
+    await opts.prompt(['FooBar'])()
   })
 })
