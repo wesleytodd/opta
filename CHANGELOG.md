@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/wesleytodd/opta/compare/v0.0.2...v0.0.3) (2020-08-28)
+
+
+### Features
+
+* support default in flags ([94312a6](https://github.com/wesleytodd/opta/commit/94312a61ae64f8ccf58ee21a1dd9ac5eafa8d9dc))
+
 ### [0.0.2](https://github.com/wesleytodd/opta/compare/v0.0.1...v0.0.2) (2020-08-26)
 
 
