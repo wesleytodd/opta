@@ -123,9 +123,7 @@ suite(pkg.name, () => {
         },
         remoteOrigin: {
           description: 'remote origin',
-          default: async (input, opts) => {
-            // Ensure we get the input including defaults
-            assert.strictEqual(opts.cwd, TMP)
+          default: (input, opts) => {
             // Fake load git remote origin
             return remote
           }
@@ -139,7 +137,7 @@ suite(pkg.name, () => {
           assert.strictEqual(typeof prompts[0].default, 'function')
 
           return {
-            remoteOrigin: await prompts[0].default({})
+            remoteOrigin: prompts[0].default()
           }
         }
       }

@@ -102,10 +102,20 @@ module.exports = function (opts = {}) {
         }
       }
 
+      // Handle default as functions, augment with entire options
+      const __default = typeof defaults[key] !== 'undefined' ? defaults[key] : flag.default
+      let _default = __default
+      if (typeof _default === 'function') {
+        _default = (ans) => {
+          return __default(ans, values(ans))
+        }
+      }
+
       cli.option(flag.key || key, {
         description: o.description,
         type: o.type,
         group: o.group,
+        default: _default,
         coerce,
         ...o.flag
       })
@@ -177,7 +187,7 @@ module.exports = function (opts = {}) {
       const __default = typeof defaults[key] !== 'undefined' ? defaults[key] : prompt.default
       let _default = __default
       if (typeof _default === 'function') {
-        _default = async (ans) => {
+        _default = (ans) => {
           return __default(ans, values(ans))
         }
       }
