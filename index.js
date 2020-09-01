@@ -23,6 +23,10 @@ module.exports = function (opts = {}) {
   let cliInput = null
   let promptInput = {}
 
+  // Only recompute values when changed
+  let isDirty = true
+  let currentState = {}
+
   // Process options
   for (const key of optionKeys) {
     let d = options[key]
@@ -60,10 +64,12 @@ module.exports = function (opts = {}) {
     prompt,
     overrides: (_overrides) => {
       overrides = Object.assign({}, overrides, _overrides)
+      isDirty = true
       return instance
     },
     defaults: (_defaults) => {
       defaults = Object.assign({}, defaults, _defaults)
+      isDirty = true
       return instance
     },
     values
@@ -126,6 +132,7 @@ module.exports = function (opts = {}) {
 
     return (argv) => {
       cliInput = cli.parse(argv)
+      isDirty = true
       return instance
     }
   }
@@ -234,12 +241,20 @@ module.exports = function (opts = {}) {
 
     return async () => {
       promptInput = Object.assign(promptInput, await promptor(prompts))
+      isDirty = true
       return instance
     }
   }
 
   function values (_overrides) {
-    return Object.assign({}, defaults, cliInput, promptInput, overrides, _overrides)
+    if (isDirty) {
+      currentState = Object.assign({}, defaults, cliInput, promptInput, overrides)
+      isDirty = false
+    }
+    if (_overrides) {
+      return Object.assign({}, currentState, _overrides)
+    }
+    return currentState
   }
 
   return instance

@@ -249,4 +249,41 @@ suite(pkg.name, () => {
 
     await opts.prompt(['FooBar'])()
   })
+
+  test('recompute only on dirty state', async () => {
+    const opts = opta({
+      options: {
+        foo: true,
+        bar: true
+      },
+      promptModule: () => {
+        return async (prompts) => {
+          return {
+            bar: 'bar'
+          }
+        }
+      }
+    })
+    const obj1 = opts.values()
+    opts.cli()(['--foo=foo'])
+    const obj2 = opts.values()
+    await opts.prompt()()
+    const obj3 = opts.values()
+    opts.overrides({ baz: 'baz' })
+    const obj4 = opts.values()
+    const obj5 = opts.values()
+
+    assert(obj1 !== obj2)
+    assert(obj2 !== obj3)
+    assert(obj3 !== obj4)
+    assert(obj4 === obj5)
+    assert.deepStrictEqual(obj5, {
+      // yargs adds these top two
+      $0: process.argv[1],
+      _: [],
+      foo: 'foo',
+      bar: 'bar',
+      baz: 'baz'
+    })
+  })
 })
