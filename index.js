@@ -62,17 +62,37 @@ module.exports = function (opts = {}) {
     options,
     cli,
     prompt,
-    overrides: (_overrides) => {
-      overrides = Object.assign({}, overrides, _overrides)
-      isDirty = true
-      return instance
-    },
-    defaults: (_defaults) => {
-      defaults = Object.assign({}, defaults, _defaults)
-      isDirty = true
-      return instance
-    },
+    overrides: mergeWith('overrides'),
+    defaults: mergeWith('defaults'),
     values
+  }
+
+  function mergeWith (type) {
+    return (_vals) => {
+      // Strip out undefined
+      const vals = Object.entries(_vals).reduce((obj, [key, val]) => {
+        if (typeof val !== 'undefined') {
+          obj[key] = val
+        }
+        return obj
+      }, {})
+
+      // Set based on type
+      switch (type) {
+        case 'overrides':
+          overrides = Object.assign({}, overrides, vals)
+          break
+        case 'defaults':
+          defaults = Object.assign({}, defaults, vals)
+          break
+        case 'promptInput':
+          promptInput = Object.assign({}, promptInput, vals)
+          break
+      }
+
+      // Mark dirty
+      isDirty = true
+    }
   }
 
   function cli (builder) {
@@ -240,8 +260,7 @@ module.exports = function (opts = {}) {
     prompts = builder(prompts)
 
     return async () => {
-      promptInput = Object.assign(promptInput, await promptor(prompts))
-      isDirty = true
+      mergeWith('promptInput')(await promptor(prompts))
       return instance
     }
   }
