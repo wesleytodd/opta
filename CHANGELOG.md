@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/wesleytodd/opta/compare/v0.0.4...v0.0.5) (2020-09-03)
+
+
+### Features
+
+* remove undefined properties before merging values ([045636d](https://github.com/wesleytodd/opta/commit/045636d951e4b58f67166a518e296411ebaa26aa))
+
 ### [0.0.4](https://github.com/wesleytodd/opta/compare/v0.0.3...v0.0.4) (2020-09-01)
 
 
