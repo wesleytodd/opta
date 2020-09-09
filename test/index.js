@@ -277,9 +277,12 @@ suite(pkg.name, () => {
     assert(obj2 !== obj3)
     assert(obj3 !== obj4)
     assert(obj4 === obj5)
+    // Normalize path
+    const root = path.join(__dirname, '..')
+    obj5.$0 = path.relative(root, obj5.$0)
     assert.deepStrictEqual(obj5, {
       // yargs adds these top two
-      $0: process.argv[1],
+      $0: path.relative(root, process.argv[1]),
       _: [],
       foo: 'foo',
       bar: 'bar',
