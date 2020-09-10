@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/wesleytodd/opta/compare/v0.0.5...v0.0.6) (2020-09-10)
+
+
+### Bug Fixes
+
+* support default functions which return undefined ([27f1e0f](https://github.com/wesleytodd/opta/commit/27f1e0f1198d1bab8efeacbcba12a4f21dc9d10e))
+* **test:** fix path check whcih fails in github actions ([67bbb47](https://github.com/wesleytodd/opta/commit/67bbb4763961bcba8caecd4ef98443b2859ebcd5))
+
 ### [0.0.5](https://github.com/wesleytodd/opta/compare/v0.0.4...v0.0.5) (2020-09-03)
 
 
