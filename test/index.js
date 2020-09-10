@@ -289,4 +289,30 @@ suite(pkg.name, () => {
       baz: 'baz'
     })
   })
+
+  test('default functions which return undefined', async () => {
+    const opts = opta({
+      options: {
+        foo: {
+          default: () => undefined
+        },
+        bar: {
+          default: async () => undefined
+        }
+      },
+      promptModule: () => {
+        return async (prompts) => {
+          return {
+            foo: prompts[0].default(),
+            bar: await prompts[1].default()
+          }
+        }
+      }
+    })
+
+    await opts.prompt()()
+    const o = opts.values()
+    assert.strictEqual(o.foo, undefined)
+    assert.strictEqual(o.bar, undefined)
+  })
 })

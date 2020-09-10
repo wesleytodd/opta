@@ -211,11 +211,27 @@ module.exports = function (opts = {}) {
       }
 
       // Handle default as functions, augment with entire options
-      const __default = typeof defaults[key] !== 'undefined' ? defaults[key] : prompt.default
+      const defaultFromRoot = typeof prompt.default === 'undefined'
+      const __default = !defaultFromRoot ? prompt.default : defaults[key]
       let _default = __default
       if (typeof _default === 'function') {
         _default = (ans) => {
-          return __default(ans, values(ans))
+          let ret = __default(ans, values(ans))
+          if (ret && typeof ret.then === 'function') {
+            // Resolve promise
+            ret = ret.then((val) => {
+              // If the default came from the root of the options object,
+              // ensure we assign it so undefined's are preserved
+              if (val === undefined && defaultFromRoot) {
+                defaults[key] = val
+              }
+              return val
+            })
+          } else if (ret === undefined && defaultFromRoot) {
+            // See above on undefineds from the root options object
+            defaults[key] = ret
+          }
+          return ret
         }
       }
 
