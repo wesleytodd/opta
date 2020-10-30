@@ -150,11 +150,13 @@ module.exports = function (opts = {}) {
     // After options so that builder has the options setup
     cli.usage(opts.usage || '$0', opts.commandDescription || 'A CLI created with opta', builder)
 
-    return (argv) => {
+    function parse (argv) {
       cliInput = cli.parse(argv)
       isDirty = true
       return instance
     }
+    parse.cli = cli
+    return parse
   }
 
   function prompt (opts) {
