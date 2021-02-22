@@ -129,7 +129,7 @@ module.exports = function (opts = {}) {
       }
 
       // Handle default as functions, augment with entire options
-      const __default = typeof defaults[key] !== 'undefined' ? defaults[key] : flag.default
+      const __default = flag.default
       let _default = __default
       if (typeof _default === 'function') {
         _default = (ans) => {
