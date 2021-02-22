@@ -1,6 +1,6 @@
 {
   "name": "opta",
-  "version": "0.0.7",
+  "version": "0.0.7-flag-defaults.0",
   "description": "Collect user input from cli flags, interactive prompts, and js input.",
   "main": "index.js",
   "type": "commonjs",
