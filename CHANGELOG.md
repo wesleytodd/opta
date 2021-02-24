@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/wesleytodd/opta/compare/v0.0.7...v0.1.0) (2021-02-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* do not pull cli defaults from the top level default key
+
+### Bug Fixes
+
+* do not pull cli defaults from the top level default key ([9207d4d](https://github.com/wesleytodd/opta/commit/9207d4defc209b744ca427b6ba9a0ec9b335cb74))
+
 ### [0.0.7](https://github.com/wesleytodd/opta/compare/v0.0.6...v0.0.7) (2020-10-30)
 
 
