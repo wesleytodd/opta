@@ -27,7 +27,7 @@
     "url": "git@github.com:wesleytodd/opta.git"
   },
   "dependencies": {
-    "inquirer": "^7.1.0",
+    "inquirer": "^8.2.0",
     "yargs": "^17.3.1"
   },
   "devDependencies": {
