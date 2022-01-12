@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/wesleytodd/opta/compare/v0.1.0...v0.2.0) (2022-01-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** inquirer@8
+* drop testing in node 10, add 16 & 17
+
+### Features
+
+* **deps:** inquirer@8 ([2834f03](https://github.com/wesleytodd/opta/commit/2834f0387d4b12568d4aa353333ca20a2476fe8a))
+* **deps:** mocha@9 ([7e545f9](https://github.com/wesleytodd/opta/commit/7e545f944b18587dd511b6f4c5ab03774aeb5021))
+* **deps:** standard-version@9.3.2 ([99a9673](https://github.com/wesleytodd/opta/commit/99a96736122ce2da4f98426ecf2285502f73e5f9))
+* **deps:** standard@16 ([f26b863](https://github.com/wesleytodd/opta/commit/f26b863cf7b772b47d566453fa8582663a350732))
+* drop testing in node 10, add 16 & 17 ([55f738a](https://github.com/wesleytodd/opta/commit/55f738a918d20d799b699b26751316a284a76c01))
+
 ## [0.1.0](https://github.com/wesleytodd/opta/compare/v0.0.7...v0.1.0) (2021-02-24)
 
 
