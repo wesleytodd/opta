@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    schedule:
+      interval: weekly
+    groups:
+        production-dependencies:
+        dependency-type: "production"
+  - package-ecosystem: npm
+    schedule:
+      interval: monthly
+    groups:
+        development-dependencies:
+        dependency-type: "development"
