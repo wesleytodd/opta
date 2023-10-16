@@ -252,7 +252,7 @@ module.exports = function (opts = {}) {
 
       const defaultPrompt = {
         name: key,
-        type: type,
+        type,
         message: _message,
         default: _default,
         when: _when,
