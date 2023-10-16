@@ -14,6 +14,8 @@
   "scripts": {
     "test": "standard && mocha",
     "test:debug": "mocha --inspect --inspect-brk --timeout=0",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "postpublish": "git push origin && git push origin --tags",
     "release": "npm t && standard-version && npm publish"
   },
