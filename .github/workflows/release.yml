@@ -39,4 +39,4 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
       - name: Publish
         if: github.ref_name == 'main' && !fromJson(needs.release.outputs.releasePlease).pr
-        run: npm publish --dry-run
+        run: npm publish
