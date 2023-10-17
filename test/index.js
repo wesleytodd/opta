@@ -315,4 +315,18 @@ suite(pkg.name, () => {
     assert.strictEqual(o.foo, undefined)
     assert.strictEqual(o.bar, undefined)
   })
+
+  test('run without a promptModule override', async () => {
+    const opts = opta({
+      options: {
+        foo: {
+          prompt: false
+        }
+      }
+    })
+
+    await opts.prompt()()
+    const o = opts.values()
+    assert.strictEqual(o.foo, undefined)
+  })
 })
