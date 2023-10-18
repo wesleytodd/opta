@@ -2,6 +2,45 @@
 const assert = require('assert')
 
 /**
+ * Helper for testing E2E workflow
+ */
+async function e2e (opts = {}) {
+  const opta = opts.opta || require('./index')
+  const optaOpts = opts.optaOpts || {}
+  const promptModuleOpts = opts.promptModuleOpts
+  const shouldCli = typeof opts.shouldCli !== 'undefined' ? opts.shouldCli : true
+  const cliOpts = opts.cliOpts
+  const cliArgs = opts.cliArgs
+  const shouldPrompt = typeof opts.shouldPrompt !== 'undefined' ? opts.shouldPrompt : true
+  const promptOpts = opts.promptOpts
+  const promptGroups = opts.promptGroups
+  const defaults = opts.defaults
+  const overrides = opts.overrides
+  const values = opts.values
+
+  // Setup prompt module
+  if (promptModule) {
+    optaOpts.promptModule = promptModule(promptModuleOpts)
+  }
+
+  // Do all the stuff in the typical order
+  const o = opta(optaOpts)
+  if (shouldCli !== false) {
+    o.cli(cliOpts)(cliArgs)
+  }
+  if (defaults) {
+    o.defaults(defaults)
+  }
+  if (shouldPrompt !== false) {
+    await o.prompt(promptGroups)(promptOpts)
+  }
+  if (overrides) {
+    o.overrides(overrides)
+  }
+  return o.values(values)
+}
+
+/**
  * Helper for testing prompts
  *
  * @param {promptModuleOptions} opts
@@ -82,6 +121,7 @@ function promptModule (opts = {}) {
  */
 module.exports = {
   test: {
+    e2e,
     promptModule
   }
 }
