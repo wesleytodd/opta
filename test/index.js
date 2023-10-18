@@ -19,12 +19,15 @@ suite(pkg.name, () => {
   })
 
   test('collect basic input', async () => {
-    const opts = opta({
-      options: {
-        foo: true,
-        bar: true
+    const values = await utils.test.e2e({
+      opta,
+      optaOpts: {
+        options: {
+          foo: true,
+          bar: true
+        }
       },
-      promptModule: utils.test.promptModule({
+      promptModuleOpts: {
         assertCount: 1,
         prompts: {
           foo: {
@@ -46,12 +49,11 @@ suite(pkg.name, () => {
             }
           }
         }
-      })
+      },
+      cliArgs: ['--foo', 'foo'],
+      values: { baz: 'baz' }
     })
 
-    opts.cli()(['--foo', 'foo'])
-    await opts.prompt()()
-    const values = opts.values({ baz: 'baz' })
     assert.strictEqual(values.foo, 'foo')
     assert.strictEqual(values.bar, 'bar')
     assert.strictEqual(values.baz, 'baz')
