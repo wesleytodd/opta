@@ -12,7 +12,7 @@
     "choices"
   ],
   "scripts": {
-    "test": "standard && mocha",
+    "test": "mocha",
     "test:debug": "mocha --inspect --inspect-brk --timeout=0",
     "lint": "standard",
     "lint:fix": "standard --fix",

@@ -5,6 +5,7 @@ const fs = require('fs').promises
 const assert = require('assert')
 const pkg = require('../package.json')
 const opta = require('..')
+const utils = require('../utils')
 
 const FIX = path.join(__dirname, 'fixtures')
 const TMP = path.join(FIX, '__tmp')
@@ -12,7 +13,7 @@ const TMP = path.join(FIX, '__tmp')
 suite(pkg.name, () => {
   beforeEach(async () => {
     try {
-      await fs.rmdir(TMP, { recursive: true })
+      await fs.rm(TMP, { recursive: true })
     } catch (e) {}
     await fs.mkdir(TMP, { recursive: true })
   })
@@ -23,23 +24,29 @@ suite(pkg.name, () => {
         foo: true,
         bar: true
       },
-      promptModule: () => {
-        return async (prompts) => {
-          assert.strictEqual(prompts[0].name, 'foo')
-          assert.strictEqual(prompts[0].message, 'foo:')
-          assert.strictEqual(prompts[0].type, 'input')
-          assert.strictEqual(prompts[0].when, false)
-
-          assert.strictEqual(prompts[1].name, 'bar')
-          assert.strictEqual(prompts[1].message, 'bar:')
-          assert.strictEqual(prompts[1].type, 'input')
-          assert.strictEqual(prompts[1].when, true)
-
-          return {
-            bar: 'bar'
+      promptModule: utils.test.promptModule({
+        assertCount: 1,
+        prompts: {
+          foo: {
+            value: 'foo',
+            assert: (p) => {
+              assert.strictEqual(p.name, 'foo')
+              assert.strictEqual(p.message, 'foo:')
+              assert.strictEqual(p.type, 'input')
+              assert.strictEqual(p.when, false)
+            }
+          },
+          bar: {
+            value: 'bar',
+            assert: (p) => {
+              assert.strictEqual(p.name, 'bar')
+              assert.strictEqual(p.message, 'bar:')
+              assert.strictEqual(p.type, 'input')
+              assert.strictEqual(p.when, true)
+            }
           }
         }
-      }
+      })
     })
 
     opts.cli()(['--foo', 'foo'])
@@ -64,19 +71,24 @@ suite(pkg.name, () => {
       defaults: {
         baz: 'baz'
       },
-      promptModule: () => {
-        return async (prompts) => {
-          assert.strictEqual(prompts[0].name, 'foo')
-          assert.strictEqual(prompts[0].default, 'foo')
-
-          assert.strictEqual(prompts[1].name, 'bar')
-          assert.strictEqual(prompts[1].default, 'bar')
-
-          return {
-            bar: 'bar!'
+      promptModule: utils.test.promptModule({
+        assertCount: 2,
+        prompts: {
+          foo: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'foo')
+              assert.strictEqual(p.default, 'foo')
+            }
+          },
+          bar: {
+            value: 'bar!',
+            assert: (p) => {
+              assert.strictEqual(p.name, 'bar')
+              assert.strictEqual(p.default, 'bar')
+            }
           }
         }
-      }
+      })
     })
 
     opts.defaults({
@@ -95,13 +107,12 @@ suite(pkg.name, () => {
         foo: true,
         bar: true
       },
-      promptModule: () => {
-        return async () => {
-          return {
-            bar: 'bar'
-          }
+      promptModule: utils.test.promptModule({
+        assertCount: 1,
+        prompts: {
+          bar: 'bar'
         }
-      }
+      })
     })
 
     opts.overrides({
@@ -129,18 +140,19 @@ suite(pkg.name, () => {
           }
         }
       },
-      promptModule: () => {
-        return async (prompts) => {
-          assert.strictEqual(prompts[0].name, 'remoteOrigin')
-          assert.strictEqual(prompts[0].message, 'remote origin:')
-          assert.strictEqual(prompts[0].type, 'input')
-          assert.strictEqual(typeof prompts[0].default, 'function')
-
-          return {
-            remoteOrigin: prompts[0].default()
+      promptModule: utils.test.promptModule({
+        assertCount: 1,
+        prompts: {
+          remoteOrigin: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'remoteOrigin')
+              assert.strictEqual(p.message, 'remote origin:')
+              assert.strictEqual(p.type, 'input')
+              assert.strictEqual(p.default, remote)
+            }
           }
         }
-      }
+      })
     })
     createGit.cli()(['--cwd', TMP])
     await createGit.prompt()()
@@ -161,24 +173,28 @@ suite(pkg.name, () => {
         },
         repository: true
       },
-      promptModule: () => {
-        return async (prompts) => {
-          assert.strictEqual(prompts[0].name, 'name')
-          assert.strictEqual(prompts[0].message, 'name:')
-          assert.strictEqual(prompts[0].type, 'input')
-          assert.strictEqual(await prompts[0].default(), '__tmp')
-
-          assert.strictEqual(prompts[1].name, 'repository')
-          assert.strictEqual(prompts[1].message, 'repository:')
-          assert.strictEqual(prompts[1].type, 'input')
-          assert.strictEqual(prompts[1].default, remote)
-
-          return {
-            name: 'tmp',
-            repository: remote
+      promptModule: utils.test.promptModule({
+        assertCount: 2,
+        prompts: {
+          name: {
+            value: 'tmp',
+            assert: (p) => {
+              assert.strictEqual(p.name, 'name')
+              assert.strictEqual(p.message, 'name:')
+              assert.strictEqual(p.type, 'input')
+              assert.strictEqual(p.default, '__tmp')
+            }
+          },
+          repository: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'repository')
+              assert.strictEqual(p.message, 'repository:')
+              assert.strictEqual(p.type, 'input')
+              assert.strictEqual(p.default, remote)
+            }
           }
         }
-      }
+      })
     })
     createPkgJson.cli()(['--cwd', TMP])
     await createPkgJson.prompt((prompts) => {
@@ -202,14 +218,15 @@ suite(pkg.name, () => {
         ...createGit.options,
         remoteOrigin: false
       },
-      promptModule: () => {
-        return async (prompts) => {
-          return {
-            name: '@scope/tmp',
-            repository: await prompts[1].default({ name: '@scope/tmp' })
+      promptModule: utils.test.promptModule({
+        assertCount: 2,
+        prompts: {
+          name: '@scope/tmp',
+          repository: {
+            defaultContext: { name: '@scope/tmp' }
           }
         }
-      }
+      })
     })
     createPkg.cli()(['--cwd', TMP])
     await createPkg.prompt((prompts) => {
@@ -237,14 +254,21 @@ suite(pkg.name, () => {
         },
         baz: true
       },
-      promptModule: () => {
-        return async (prompts) => {
-          assert.strictEqual(prompts.length, 2)
-          assert.strictEqual(prompts[0].name, 'foo')
-          assert.strictEqual(prompts[1].name, 'bar')
-          return { }
+      promptModule: utils.test.promptModule({
+        assertCount: 2,
+        prompts: {
+          foo: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'foo')
+            }
+          },
+          bar: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'bar')
+            }
+          }
         }
-      }
+      })
     })
 
     await opts.prompt(['FooBar'])()
@@ -256,13 +280,12 @@ suite(pkg.name, () => {
         foo: true,
         bar: true
       },
-      promptModule: () => {
-        return async (prompts) => {
-          return {
-            bar: 'bar'
-          }
+      promptModule: utils.test.promptModule({
+        assertCount: 1,
+        prompts: {
+          bar: 'bar'
         }
-      }
+      })
     })
     const obj1 = opts.values()
     opts.cli()(['--foo=foo'])
@@ -300,14 +323,9 @@ suite(pkg.name, () => {
           default: async () => undefined
         }
       },
-      promptModule: () => {
-        return async (prompts) => {
-          return {
-            foo: prompts[0].default(),
-            bar: await prompts[1].default()
-          }
-        }
-      }
+      promptModule: utils.test.promptModule({
+        assertCount: 2
+      })
     })
 
     await opts.prompt()()
