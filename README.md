@@ -103,3 +103,60 @@ await myOpts.prompt()
 const vals = myOpts.values()
 console.log(vals) // all options from both Project and My Project
 ```
+
+## Prompt Testing
+
+Testing user input can be difficult. This package exports a test helper which can mimic different behaviors of users interacting
+with prompts without dealing with the complicated work to actually handle user input. Here is an example:
+
+```javascript
+const test = require('node:test');
+const assert = require('node:assert')
+const opta = require('opta')
+const optaUtils = require('opta/utils')
+
+test('some test', async (t) => {
+  const opts = opta({
+    options: {
+      foo: true,
+      bar: true
+    },
+    // Create a promptModule mock
+    promptModule: optaUtils.test.promptModule({
+      // Will assert that two prompts were displayed
+      assertCount: 2,
+      prompts: {
+        foo: {
+          // Set a value as if it was user input
+          value: 'foo',
+          
+          // Assert some things about the prompt config
+          // which is passed on to inquirer
+          assert: (p) =>{
+            assert.strictEqual(p.name, 'foo')
+            assert.strictEqual(p.message, 'foo:')
+            assert.strictEqual(p.type, 'input')
+            assert.strictEqual(p.when, true)
+          },
+
+          // Setup a context object which is passed to the prompt
+          // default if it is a function
+          defaultContext: {}
+        },
+
+        // Or more simply, just set value directly
+        bar: 'bar'
+      }
+    })
+  })
+
+  // Run the opta prompts
+  await opts.prompt()()
+  const values = opts.values({ baz: 'baz' })
+  assert.deepStrictEqual(values, {
+    foo: 'foo',
+    bar: 'bar',
+    baz: 'baz'
+  })
+})
+```
