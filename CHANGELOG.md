@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/wesleytodd/opta/compare/v1.0.2...v1.1.0) (2024-01-03)
+
+
+### Features
+
+* added promptModule test helper ([1ed108f](https://github.com/wesleytodd/opta/commit/1ed108f5341edc32e6ba822dcded9b1665375265))
+
+
+### Bug Fixes
+
+* **test:** added test to check for inquirer import ([27e4ed5](https://github.com/wesleytodd/opta/commit/27e4ed5e7f9002b6ecb8f54014551ff83306dd1a))
+
 ## [1.0.2](https://github.com/wesleytodd/opta/compare/v1.0.1...v1.0.2) (2023-10-17)
 
 
