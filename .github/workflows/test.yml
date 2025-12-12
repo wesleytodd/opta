@@ -1,7 +1,6 @@
 name: Test
 on:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
 jobs:
   test:
-    uses: wesleytodd/opta/.github/workflows/test-workflow.yml@main
+    uses: ./.github/workflows/test-workflow.yml
