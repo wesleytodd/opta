@@ -6,6 +6,9 @@ on:
         type: string
         default: 'latest'
         description: 'The dist-tag to publish to'
+    secrets:
+      NPM_TOKEN:
+        required: true
 jobs:
   publish:
     name: Publish

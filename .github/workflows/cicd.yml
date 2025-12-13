@@ -6,7 +6,6 @@ on:
 permissions:
   contents: write
   pull-requests: write
-  actions: write
 jobs:
   test:
     uses: ./.github/workflows/test-workflow.yml
@@ -37,3 +36,5 @@ jobs:
     uses: ./.github/workflows/publish.yml
     permissions:
       id-token: write
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
