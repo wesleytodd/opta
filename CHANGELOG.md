@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.1](https://github.com/wesleytodd/opta/compare/v1.1.0...v1.1.1) (2025-12-13)
+
+
+### Bug Fixes
+
+* **ci:** rename workflows ([5ab9b8c](https://github.com/wesleytodd/opta/commit/5ab9b8c8874f7c1884d90f2356eca5d608f105d8))
+* **ci:** set git user after checkout ([17373cf](https://github.com/wesleytodd/opta/commit/17373cf928ff46bb6f59728a18d9e9d44e89e6b8))
+* **devdeps:** update dev deps and sorted out broken CI  ([#22](https://github.com/wesleytodd/opta/issues/22)) ([bd464d1](https://github.com/wesleytodd/opta/commit/bd464d16d24da3d86a70e0c25c931505573259cd))
+
 ## [1.1.0](https://github.com/wesleytodd/opta/compare/v1.0.2...v1.1.0) (2024-01-03)
 
 
