@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.4](https://github.com/wesleytodd/opta/compare/v1.1.3...v1.1.4) (2025-12-13)
+
+
+### Bug Fixes
+
+* **ci:** pass secrets ([c6104a7](https://github.com/wesleytodd/opta/commit/c6104a7c46eea86fde67ea4d1b723b2f04a63c4b))
+
 ## [1.1.3](https://github.com/wesleytodd/opta/compare/v1.1.2...v1.1.3) (2025-12-13)
 
 
