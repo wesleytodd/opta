@@ -41,10 +41,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - name: Install
-        run: npm install --package-lock=false
       - name: Install legacy mocha
         if: ${{ matrix.mocha != '' }}
-        run: npm install --save-dev mocha@${{ matrix.mocha }}
+        run: npm install --package-lock=false mocha@${{ matrix.mocha }}
+      - name: Install
+        run: npm install --package-lock=false
+      - run: npm ls
       - name: Test
         run: npm test
