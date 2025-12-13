@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.3](https://github.com/wesleytodd/opta/compare/v1.1.2...v1.1.3) (2025-12-13)
+
+
+### Bug Fixes
+
+* **ci:** fix dist-tag in publish workflow ([58a924b](https://github.com/wesleytodd/opta/commit/58a924baf5e2de70b6f86b3cfe1bf18d8863713c))
+
 ## [1.1.2](https://github.com/wesleytodd/opta/compare/v1.1.1...v1.1.2) (2025-12-13)
 
 
