@@ -1,4 +1,4 @@
-name: Release
+name: CICD
 on:
   push:
     branches:
@@ -10,6 +10,7 @@ permissions:
 jobs:
   test:
     uses: ./.github/workflows/test-workflow.yml
+
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -22,13 +23,14 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         name: Release Please
         if: github.ref_name == 'main'
         id: releasePlease
         with:
           release-type: node
           token: ${{ secrets.GITHUB_TOKEN }}
+
   publish:
     name: Publish
     runs-on: ubuntu-latest
