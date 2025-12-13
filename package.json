@@ -15,9 +15,7 @@
     "test": "mocha",
     "test:debug": "mocha --inspect --inspect-brk --timeout=0",
     "lint": "standard",
-    "lint:fix": "standard --fix",
-    "postpublish": "git push origin && git push origin --tags",
-    "release": "npm t && standard-version && npm publish"
+    "lint:fix": "standard --fix"
   },
   "author": "Wes Todd <wes@wesleytodd.com>",
   "license": "ISC",
@@ -29,12 +27,12 @@
     "url": "git@github.com:wesleytodd/opta.git"
   },
   "dependencies": {
-    "inquirer": "^8.2.6",
+    "inquirer": "8.2.6",
     "yargs": "^17.3.1"
   },
   "devDependencies": {
-    "mocha": "^10.2.0",
-    "standard": "^17.1.0",
-    "standard-version": "^9.3.2"
+    "mocha": "^11.7.5",
+    "standard": "^17.1.2",
+    "standard-version": "^9.5.0"
   }
 }
