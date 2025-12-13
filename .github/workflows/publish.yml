@@ -1,8 +1,11 @@
 name: Publish
 on:
   workflow_call:
-permissions:
-  id-token: write
+    inputs:
+      tag:
+        type: string
+        default: 'latest'
+        description: 'The dist-tag to publish to'
 jobs:
   publish:
     name: Publish
