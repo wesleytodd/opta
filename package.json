@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "inquirer": "8.2.6",
-    "yargs": "^17.3.1"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "mocha": "^11.7.5",
