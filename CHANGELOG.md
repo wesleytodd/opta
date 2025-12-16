@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.5](https://github.com/wesleytodd/opta/compare/v1.1.4...v1.1.5) (2025-12-16)
+
+
+### Bug Fixes
+
+* **utils:** fixed prompt utils when using when/default ([#29](https://github.com/wesleytodd/opta/issues/29)) ([f4c2300](https://github.com/wesleytodd/opta/commit/f4c23005ab8931a05e8086f96c0e841ad897782d))
+
 ## [1.1.4](https://github.com/wesleytodd/opta/compare/v1.1.3...v1.1.4) (2025-12-13)
 
 
