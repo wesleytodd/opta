@@ -68,20 +68,38 @@ function promptModule (opts = {}) {
 
   return () => {
     return async function doPrompts (prompts = []) {
+      const answers = {}
+
       // Set defaults from prompts
       const out = await Promise.all(prompts.map(async (p) => {
-        // If when is false, dont "ask" or set a return
-        if (!p.when) {
-          return []
-        }
         const promptOpts = opts.prompts[p.name] || {}
 
-        // Handle default values, even async functions
-        let ret = typeof p.default === 'function' ? p.default(promptOpts.defaultContext || {}) : p.default
-        if (ret && typeof ret.then === 'function') {
-          ret = await ret
+        // If when is false, dont "ask" or set a return
+        if (p.when === false) {
+          return []
         }
-        p.default = ret
+        if (typeof p.when === 'function') {
+          const def = typeof promptOpts.whenDefault !== 'undefined' ? promptOpts.whenDefault : true
+          const context = { ...(promptOpts.whenContext || {}), ...answers }
+          let whenRet = p.when(answers, def, context)
+          if (whenRet && typeof whenRet.then === 'function') {
+            whenRet = await whenRet
+          }
+          if (!whenRet) {
+            return []
+          }
+        }
+
+        // Handle default values, even async functions
+        if (typeof p.default === 'function') {
+          const context = { ...(promptOpts.defaultContext || {}), ...answers }
+          let defRet = p.default(answers, context)
+          if (defRet && typeof defRet.then === 'function') {
+            defRet = await defRet
+          }
+          p.default = defRet
+        }
+        let ret = p.default
 
         // If we have prompt values/assertions run them
         if (promptOpts) {
@@ -93,6 +111,8 @@ function promptModule (opts = {}) {
           // assign return value
           ret = typeof promptOpts === 'string' ? promptOpts : promptOpts.value || ret
         }
+
+        answers[p.name] = ret
 
         return [p.name, ret]
       }))
