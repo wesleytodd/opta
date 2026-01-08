@@ -76,6 +76,9 @@ function promptModule (opts = {}) {
 
         // If when is false, dont "ask" or set a return
         if (p.when === false) {
+          if (promptOpts.assert) {
+            promptOpts.assert(p)
+          }
           return []
         }
         if (typeof p.when === 'function') {
@@ -86,6 +89,9 @@ function promptModule (opts = {}) {
             whenRet = await whenRet
           }
           if (!whenRet) {
+            if (promptOpts.assert) {
+              promptOpts.assert(p)
+            }
             return []
           }
         }
