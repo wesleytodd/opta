@@ -125,6 +125,7 @@ module.exports = function (opts = {}) {
               throw new Error(valid)
             }
           }
+          return v
         }
       }
 
