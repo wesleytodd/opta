@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.6](https://github.com/wesleytodd/opta/compare/v1.1.5...v1.1.6) (2026-01-08)
+
+
+### Bug Fixes
+
+* top level filter applies correctly to both cli and prompt input ([#34](https://github.com/wesleytodd/opta/issues/34)) ([b6a19c4](https://github.com/wesleytodd/opta/commit/b6a19c4779f1572cf97ad1cb5a5f86111e2e60fe))
+* **utils:** call assert on prompt even when when is false ([#32](https://github.com/wesleytodd/opta/issues/32)) ([24756a3](https://github.com/wesleytodd/opta/commit/24756a36ea43638a3016d6ad42a249447d7f3bf2))
+
 ## [1.1.5](https://github.com/wesleytodd/opta/compare/v1.1.4...v1.1.5) (2025-12-16)
 
 
