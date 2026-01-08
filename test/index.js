@@ -103,6 +103,89 @@ suite(pkg.name, () => {
     assert.strictEqual(values.baz, 'baz')
   })
 
+  test('cli --help', (cb) => {
+    const opts = opta({
+      options: {
+        foo: true,
+        bar: {
+          flag: false
+        },
+        fooBar: {
+          flag: {
+            key: 'foo-bar'
+          }
+        }
+      }
+    })
+
+    opts.cli()(['--help'], function (err, argv, output) {
+      if (err) {
+        return cb(err)
+      }
+      assert(argv.help)
+      assert.strictEqual(argv.foo, undefined)
+      assert.strictEqual(argv.fooBar, undefined)
+      assert(!Object.prototype.hasOwnProperty.call(argv, 'bar'))
+      assert(output.includes('--help'))
+      assert(output.includes('--version'))
+      assert(output.includes('--foo'))
+      assert(output.includes('--foo-bar'))
+      assert(!output.includes('--bar'))
+      assert.deepStrictEqual(opts.values(), {})
+      cb()
+    })
+  })
+
+  test('cli sub-commands with input', async () => {
+    const opts = opta({
+      options: {
+        fooBar: {
+          flag: {
+            key: 'foo-bar',
+            type: 'boolean'
+          }
+        }
+      },
+      promptModule: utils.test.promptModule({
+        assertCount: 0,
+        prompts: {
+          fooBar: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'fooBar')
+              assert.strictEqual(p.when, false)
+            }
+          }
+        }
+      })
+    })
+
+    const cli = opts.cli((yargs) => {
+      yargs.command('cmd', 'a test sub command', (y) => {
+        y.option('test', {
+          type: 'string'
+        })
+      })
+    })
+
+    await new Promise((resolve, reject) => {
+      cli(['cmd', '--test=yes', '--foo-bar'], (err, argv) => {
+        if (err) {
+          return reject(err)
+        }
+        assert.strictEqual(argv.test, 'yes')
+        assert.strictEqual(argv.fooBar, true)
+        assert.deepStrictEqual(opts.values(), {})
+        resolve()
+      })
+    })
+
+    await opts.prompt()()
+
+    const o = opts.values()
+    assert.strictEqual(o.test, 'yes')
+    assert.strictEqual(o.fooBar, true)
+  })
+
   test('work without calling .cli()', async () => {
     const opts = opta({
       options: {
