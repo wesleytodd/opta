@@ -87,5 +87,52 @@ suite('utils', () => {
         example5: 'example5 default'
       })
     })
+
+    test('always calls prompt assertions even if when false', async () => {
+      let called = 0
+      function calledAssert (p) {
+        called++
+        return true
+      }
+      const prompts = [{
+        name: 'example',
+        when: true
+      }, {
+        name: 'example2',
+        when: false
+      }, {
+        name: 'example3',
+        when: () => {
+          return false
+        }
+      }, {
+        name: 'example4',
+        when: () => {
+          return true
+        }
+      }]
+
+      const pm = utils.test.promptModule({
+        assertCount: 2,
+        prompts: {
+          example: {
+            assert: calledAssert
+          },
+          example2: {
+            assert: calledAssert
+          },
+          example3: {
+            assert: calledAssert
+          },
+          example4: {
+            assert: calledAssert
+          }
+        }
+      })()
+
+      await pm(prompts)
+
+      assert.strictEqual(called, 4)
+    })
   })
 })
