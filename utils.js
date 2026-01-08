@@ -118,6 +118,10 @@ function promptModule (opts = {}) {
           ret = typeof promptOpts === 'string' ? promptOpts : promptOpts.value || ret
         }
 
+        if (typeof p.filter === 'function') {
+          ret = p.filter(ret)
+        }
+
         answers[p.name] = ret
 
         return [p.name, ret]

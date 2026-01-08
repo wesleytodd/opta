@@ -349,4 +349,41 @@ suite(pkg.name, () => {
     const o = opts.values()
     assert.strictEqual(o.foo, undefined)
   })
+
+  test('filter', async () => {
+    const opts = await utils.test.e2e({
+      opta,
+      optaOpts: {
+        options: {
+          foo: {
+            filter: (i) => i && i.split(',')
+          },
+          bar: {
+            filter: (i) => i && i.split(',')
+          }
+        }
+      },
+      promptModuleOpts: {
+        assertCount: 1,
+        prompts: {
+          foo: {
+            assert: (p) => {
+              assert.strictEqual(p.name, 'foo')
+              assert.strictEqual(p.when, false)
+            }
+          },
+          bar: {
+            value: 'foo,bar,baz',
+            assert: (p) => {
+              assert.strictEqual(p.name, 'bar')
+              assert.strictEqual(p.when, true)
+            }
+          }
+        }
+      },
+      cliArgs: ['--foo', 'foo,bar,baz']
+    })
+    assert.deepStrictEqual(opts.foo, ['foo', 'bar', 'baz'])
+    assert.deepStrictEqual(opts.bar, ['foo', 'bar', 'baz'])
+  })
 })
