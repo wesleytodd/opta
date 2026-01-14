@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.7](https://github.com/wesleytodd/opta/compare/v1.1.6...v1.1.7) (2026-01-14)
+
+
+### Bug Fixes
+
+* **test:** added test for parsing cli input and sub-commands ([#35](https://github.com/wesleytodd/opta/issues/35)) ([6dbbbe3](https://github.com/wesleytodd/opta/commit/6dbbbe30494c670e4c69da7bd429d71a8efc148a))
+
 ## [1.1.6](https://github.com/wesleytodd/opta/compare/v1.1.5...v1.1.6) (2026-01-08)
 
 
